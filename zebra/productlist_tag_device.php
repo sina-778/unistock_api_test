@@ -8,10 +8,9 @@ header('content-type: application/json');
 
 	switch ( $request) {
 
-		case 'POST':
-			// code...
-			$data=json_decode(file_get_contents('php://input'),true);
-			postmethod($data);
+
+		case 'GET':
+			postmethod();
 		break;
 		default:
 		echo '{"name" : "data not found"}';
@@ -21,14 +20,14 @@ header('content-type: application/json');
 
 
 
-    function postmethod($data){
+    function postmethod(){
 
 
     include "index.php";
-    $device=$data["device"];
-	$tag_no=$data["tag_no"];
+    //$device=$data["device"];
+	$tag_no = isset($_GET['tag_no']) ? $_GET['tag_no'] : die();
 
-	$sql = " select  id,zid,CONVERT(varchar,ztime,7) as ztime,CONVERT(varchar,zutime,7) as zutime,tag_no,item_code,item_desc,price,scan_qty,adj_qty,auto_qty,manual_qty,xcus,xorg,device,empid,countingsetup_id,outlet,store,zactive,zuuserid,zauserid  from zebra where device = '$device' and tag_no = '$tag_no' order by CONVERT(time, zutime) desc ";
+	$sql = " select  id,zid,CONVERT(varchar,ztime,7) as ztime,CONVERT(varchar,zutime,7) as zutime,tag_no,item_code,item_desc,price,scan_qty,adj_qty,auto_qty,manual_qty,xcus,xorg,device,empid,countingsetup_id,outlet,store,zactive,zuuserid,zauserid  from zebra where  tag_no = '$tag_no' order by CONVERT(time, zutime) desc ";
 
     $stmt = sqlsrv_query( $conn, $sql );
 

@@ -40,16 +40,16 @@ function postmethod($data){
 			@xorg varchar (250)
     select  @xcus = xcus, @xdesc = xdesc, @xorg = xcusname from caitemapp where  xitem ='$item'
 
-    IF EXISTS ( SELECT 1 FROM zebra WHERE item_code = '$item' )
+    IF EXISTS ( SELECT 1 FROM zebra WHERE item_code = '$item' and tag_no = '$tag_no')
     BEGIN
         UPDATE zebra 
-        SET scan_qty=scan_qty + '$qty', auto_qty= auto_qty + '$qty', zuuserid = '$user_id', zutime = GETDATE(), device = '$device'
-        WHERE item_code = '$item';
+        SET scan_qty=scan_qty + $qty, auto_qty= auto_qty + $qty, zuuserid = '$user_id', zutime = GETDATE(), device = '$device'
+        WHERE item_code = '$item' and tag_no = '$tag_no' ;
     END
     ELSE
     BEGIN
-        INSERT INTO zebra(zid, ztime, zauserid, tag_no, item_code,item_desc,scan_qty,adj_qty,auto_qty,manual_qty,xcus,xorg,device,empid,countingsetup_id,outlet,store, zactive, price)
-        values( 100080, GETDATE(), '$user_id', '$tag_no', '$item', @xdesc, 1, 0, 1, 0,  @xcus , @xorg, '$device','$user_id', '$admin_id', '$outlet', '$store', 1,0 )
+        INSERT INTO zebra(zid, ztime,zutime, zauserid, tag_no, item_code,item_desc,scan_qty,adj_qty,auto_qty,manual_qty,xcus,xorg,device,empid,countingsetup_id,outlet,store, zactive, price,zuuserid)
+        values( 100080, GETDATE(),GETDATE(), '$user_id', '$tag_no', '$item', @xdesc, 1, 0, 1, 0,  @xcus , @xorg, '$device','$user_id', '$admin_id', '$outlet', '$store', 1,0,'$user_id' )
     END
     END";
 
